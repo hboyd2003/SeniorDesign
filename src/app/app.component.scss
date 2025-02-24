@@ -1,0 +1,17 @@
+@use '../theme.scss' as theme;
+
+.page-container {
+  height: 100vh;
+}
+
+#navigation_sidebar {
+  padding: 12px;
+  width: fit-content;
+  background-color: var(--mat-sys-surface-container);
+}
+
+#navigation_header {
+  padding: 12px;
+}
+
+
