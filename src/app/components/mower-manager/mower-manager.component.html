@@ -1,0 +1,101 @@
+<div class="mower-manager-container">
+    <div class="header">
+      <h2>Mower Manager</h2>
+      <button class="add-button" (click)="toggleForm()">
+        {{ showForm ? 'Cancel' : 'Add New Mower' }}
+      </button>
+    </div>
+    
+    <div *ngIf="showForm" class="form-container">
+      <form [formGroup]="mowerForm" (ngSubmit)="onSubmit()">
+        <div class="form-group">
+          <label for="name">Name</label>
+          <input id="name" type="text" formControlName="name">
+          <div *ngIf="mowerForm.get('name')?.invalid && mowerForm.get('name')?.touched" class="error">
+            Name is required
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="latitude">Latitude</label>
+          <input id="latitude" type="number" step="0.0001" formControlName="latitude">
+          <div *ngIf="mowerForm.get('latitude')?.invalid && mowerForm.get('latitude')?.touched" class="error">
+            Valid latitude is required (-90 to 90)
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="longitude">Longitude</label>
+          <input id="longitude" type="number" step="0.0001" formControlName="longitude">
+          <div *ngIf="mowerForm.get('longitude')?.invalid && mowerForm.get('longitude')?.touched" class="error">
+            Valid longitude is required (-180 to 180)
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="status">Status</label>
+          <select id="status" formControlName="status">
+            <option value="">Select Status</option>
+            <option value="Active">Active</option>
+            <option value="Idle">Idle</option>
+            <option value="Charging">Charging</option>
+            <option value="Maintenance">Maintenance</option>
+          </select>
+          <div *ngIf="mowerForm.get('status')?.invalid && mowerForm.get('status')?.touched" class="error">
+            Status is required
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="batteryLevel">Battery Level (%)</label>
+          <input id="batteryLevel" type="number" min="0" max="100" formControlName="batteryLevel">
+          <div *ngIf="mowerForm.get('batteryLevel')?.invalid && mowerForm.get('batteryLevel')?.touched" class="error">
+            Valid battery level is required (0-100)
+          </div>
+        </div>
+        
+        <button type="submit" [disabled]="mowerForm.invalid">Add Mower</button>
+      </form>
+    </div>
+    
+    <div class="mowers-table">
+      <table *ngIf="mowers.length > 0">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Status</th>
+            <th>Battery</th>
+            <th>Last Active</th>
+            <th>Location</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let mower of mowers">
+            <td>{{ mower.name }}</td>
+            <td>{{ mower.status }}</td>
+            <td>
+              <div class="battery-indicator">
+                <div class="battery-level" [style.width.%]="mower.batteryLevel" 
+                     [ngClass]="{
+                       'low': mower.batteryLevel < 20,
+                       'medium': mower.batteryLevel >= 20 && mower.batteryLevel < 60,
+                       'high': mower.batteryLevel >= 60
+                     }">
+                </div>
+              </div>
+              {{ mower.batteryLevel }}%
+            </td>
+            <td>{{ mower.lastActive | date:'short' }}</td>
+            <td>{{ mower.latitude }}, {{ mower.longitude }}</td>
+            <td>
+              <button class="delete-button" (click)="deleteMower(mower.id)">Delete</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div *ngIf="mowers.length === 0" class="no-mowers">
+        No mowers found. Add a mower to get started.
+      </div>
+    </div>
+  </div>

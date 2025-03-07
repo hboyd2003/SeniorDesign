@@ -1,0 +1,26 @@
+<div class="sidebar">
+    <div class="nav-section">
+      <h3>Navigation</h3>
+      <button 
+        [class.active]="currentView === 'map'" 
+        (click)="navigateTo('map')">
+        Map View
+      </button>
+      <button 
+        [class.active]="currentView === 'mower-manager'" 
+        (click)="navigateTo('mower-manager')">
+        Mower Manager
+      </button>
+    </div>
+  
+    <div *ngIf="currentView === 'map'" class="mower-list-section">
+      <h3>Mowers</h3>
+      <div *ngFor="let mower of mowers" class="mower-item">
+        <input 
+          type="checkbox" 
+          [checked]="mower.isSelected" 
+          (change)="toggleMowerSelection(mower.id)">
+        <span>{{ mower.name }}</span>
+      </div>
+    </div>
+  </div>
